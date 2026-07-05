@@ -1,7 +1,11 @@
 """birthdays.yaml -> birthdays.ics 생성.
 
 음력 생일은 매년 양력 날짜가 달라 RRULE로 반복 불가.
-=> lunardate로 연도별 양력 날짜를 계산해 개별 이벤트로 생성.
+=> 연도별 양력 날짜를 계산해 개별 이벤트로 생성.
+
+음력 변환은 한국천문연구원(KASI) 데이터 기반 korean_lunar_calendar 사용.
+(중국 음력과 자오선 차이로 하루씩 어긋나는 날짜가 있어 한국 기준을 쓴다.)
+KASI 데이터 상한은 양력 2050-12-31 → 이후 음력 생일은 자동 skip.
 """
 
 import sys
@@ -9,21 +13,21 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import yaml
-from lunardate import LunarDate
+from korean_lunar_calendar import KoreanLunarCalendar
 
 CONFIG_PATH = Path(__file__).parent / "birthdays.yaml"
 OUTPUT_PATH = Path(__file__).parent / "public" / "birthdays.ics"
 
+_cal = KoreanLunarCalendar()
+
 
 def lunar_to_solar(birth: date, leap: bool, target_year: int):
-    """target_year의 음력 생일에 해당하는 양력 날짜 반환. 그 해에 없으면 None."""
+    """target_year의 음력 생일(KASI)에 해당하는 양력 날짜. 없거나 범위 밖이면 None."""
     month, day = birth.month, birth.day
     for use_leap in ([leap, False] if leap else [False]):
-        for d in (day, 29, 28):  # 30일 없는 달 대비 fallback
-            try:
-                return LunarDate(target_year, month, d, use_leap).toSolarDate()
-            except (ValueError, KeyError):
-                continue
+        for d in (day, 29, 28):  # 윤달 부재/30일 없는 달 대비 fallback
+            if _cal.setLunarDate(target_year, month, d, use_leap):
+                return date.fromisoformat(_cal.SolarIsoFormat())
     return None
 
 
