@@ -7,23 +7,32 @@
 - GitHub Actions가 매년 1/1(한국시각) 자동으로 다음 1년치 롤링 갱신 + yaml 수정 push 시 즉시 재생성
 - GitHub Pages가 `birthdays.ics`를 URL로 서빙 → Notion Calendar / Google Calendar에서 **URL 구독**
 
-구독 URL:
+구독 URL (`<사용자명>` = **본인 GitHub 아이디**):
 ```
-https://mireutale.github.io/googleCalendar-Lunar/birthdays.ics
+https://<사용자명>.github.io/googleCalendar-Lunar/birthdays.ics
 ```
+
+> 이 저장소는 원본이라 다른 사람은 push할 수 없다.
+> **각자 Fork 떠서 본인 저장소에서** 생일을 관리하고, 위 URL의 `<사용자명>`도 본인 아이디로 바꿔 쓴다.
 
 ---
 
 ## 최초 1회 세팅
 
-1. **GitHub Pages 켜기**
-   저장소 → **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 선택.
+1. **Fork**
+   이 저장소 우상단 **Fork** → 본인 계정으로 복사. 이후 모든 작업은 **본인 Fork**에서 한다.
 
-2. **첫 배포 실행**
+2. **GitHub Pages 켜기**
+   본인 Fork → **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 선택.
+
+3. **Actions 활성화**
+   Fork한 저장소는 Actions가 기본 비활성일 수 있음. **Actions 탭 → "I understand my workflows, go ahead and enable them"** 클릭.
+
+4. **첫 배포 실행**
    `birthdays.yaml` 을 실제 생일로 수정 후 push. (또는 **Actions 탭 → Build & Deploy → Run workflow** 수동 실행)
-   초록불 뜨면 위 구독 URL 접속해 `.ics` 내용 확인.
+   초록불 뜨면 `https://<본인아이디>.github.io/googleCalendar-Lunar/birthdays.ics` 접속해 `.ics` 내용 확인.
 
-3. **캘린더 앱에서 구독** (아래)
+5. **캘린더 앱에서 구독** (아래)
 
 ---
 
