@@ -88,27 +88,27 @@ settings:
   years_ahead: 50                              # 오늘부터 몇 년치 생성
   all_day: true                                # 종일 일정
   reminder_days: 1                             # 며칠 전 알림 (0=당일)
-  title_format: "🎂 {name} 생일 ({age}세)"    # {name}=이름, {age}=해당연도-출생연도
+  title_format: "🎂 {name} 생일"               # {name}=이름
 
 people:
   - name: 홍길동
     type: solar          # lunar=음력 / solar=양력
-    date: 1990-01-01     # 출생일 YYYY-MM-DD (음력이면 음력 날짜 그대로)
+    date: 01-01          # 월-일 (MM-DD). 연도 생략 가능
 
   - name: 홍길순
     type: lunar
-    date: 1992-08-15     # 음력 날짜 그대로
+    date: 08-15          # 음력 날짜 그대로 (연도 생략 가능)
     leap_month: false    # 음력 윤달이면 true (양력은 생략 가능)
 ```
 
 | 필드 | 설명 |
 |------|------|
 | `type` | `lunar`(음력) 또는 `solar`(양력) |
-| `date` | 출생일. 음력이면 **음력 날짜 그대로** 적는다 |
+| `date` | 생일 **월-일**(`MM-DD`). 연도는 생략 가능(`YYYY-MM-DD`도 허용). 음력이면 **음력 날짜 그대로** |
 | `leap_month` | 음력 윤달 출생만 `true` |
 | `years_ahead` | 미래 몇 년치 생성할지 |
 | `reminder_days` | 알림 며칠 전 (`0`=당일 아침) |
-| `title_format` | 일정 제목. `{name}`, `{age}` 치환 |
+| `title_format` | 일정 제목. `{name}` 치환 |
 
 수정 → `git add . && git commit -m "생일 수정" && git push` → 자동 재생성·배포.
 

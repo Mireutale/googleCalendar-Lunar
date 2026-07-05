@@ -22,9 +22,17 @@ OUTPUT_PATH = Path(__file__).parent / "public" / "birthdays.ics"
 _cal = KoreanLunarCalendar()
 
 
-def lunar_to_solar(birth: date, leap: bool, target_year: int):
+def parse_md(raw) -> tuple[int, int]:
+    """date 필드 -> (month, day). YYYY-MM-DD / MM-DD / date 객체 모두 허용."""
+    if isinstance(raw, date):
+        return raw.month, raw.day
+    parts = str(raw).split("-")
+    m, d = parts[-2], parts[-1]  # 연도 유무 무관하게 뒤 두 개
+    return int(m), int(d)
+
+
+def lunar_to_solar(month: int, day: int, leap: bool, target_year: int):
     """target_year의 음력 생일(KASI)에 해당하는 양력 날짜. 없거나 범위 밖이면 None."""
-    month, day = birth.month, birth.day
     for use_leap in ([leap, False] if leap else [False]):
         for d in (day, 29, 28):  # 윤달 부재/30일 없는 달 대비 fallback
             if _cal.setLunarDate(target_year, month, d, use_leap):
@@ -32,9 +40,9 @@ def lunar_to_solar(birth: date, leap: bool, target_year: int):
     return None
 
 
-def solar_in_year(birth: date, target_year: int):
+def solar_in_year(month: int, day: int, target_year: int):
     try:
-        return birth.replace(year=target_year)
+        return date(target_year, month, day)
     except ValueError:  # 2/29 -> 평년
         return date(target_year, 2, 28)
 
@@ -55,8 +63,8 @@ def fold(line: str) -> str:
     return "\r\n".join(out)
 
 
-def event(name: str, ev_date: date, age: int, cfg: dict, uid: str) -> list:
-    title = cfg["title_format"].format(name=name, age=age)
+def event(name: str, ev_date: date, cfg: dict, uid: str) -> list:
+    title = cfg["title_format"].format(name=name)
     end = ev_date + timedelta(days=1)
     lines = [
         "BEGIN:VEVENT",
@@ -91,16 +99,15 @@ def build(cfg: dict, today: date) -> str:
         "X-WR-TIMEZONE:Asia/Seoul",
     ]
     for i, p in enumerate(cfg["people"]):
-        birth = p["date"] if isinstance(p["date"], date) else date.fromisoformat(str(p["date"]))
+        month, day = parse_md(p["date"])
         ptype = p["type"]
         leap = bool(p.get("leap_month", False))
         for y in range(today.year, today.year + years + 1):
-            ev = lunar_to_solar(birth, leap, y) if ptype == "lunar" else solar_in_year(birth, y)
+            ev = lunar_to_solar(month, day, leap, y) if ptype == "lunar" else solar_in_year(month, day, y)
             if ev is None or ev < today:
                 continue
-            age = y - birth.year
             uid = f"{i}-{ptype}-{y}@lunar-birthday"
-            out += event(p["name"], ev, age, s, uid)
+            out += event(p["name"], ev, s, uid)
     out.append("END:VCALENDAR")
     return "\r\n".join(fold(l) for l in out) + "\r\n"
 
