@@ -2,3 +2,7 @@
 __pycache__/
 public/
 *.pyc
+birthdays.yaml
+
+# secret gist id — 공개 저장소에 노출되면 obscurity 깨짐
+.gist_id

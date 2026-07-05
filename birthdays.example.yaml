@@ -1,5 +1,8 @@
-# 생일 설정 파일 — 이 파일만 수정하면 됨.
-# 수정 후 git push 하면 GitHub Actions가 자동으로 .ics 재생성.
+# 생일 설정 예시 파일.
+# 이 파일을 birthdays.yaml 로 복사한 뒤 본인 생일로 수정하세요.
+#   cp birthdays.example.yaml birthdays.yaml
+# birthdays.yaml 은 .gitignore 되어 push 되지 않습니다(개인정보).
+# birthdays.yaml 이 없으면 generate.py 는 이 예시 파일로 빌드합니다.
 
 settings:
   years_ahead: 50                              # 오늘부터 몇 년치 생성
@@ -11,11 +14,11 @@ people:
   # type: lunar(음력) 또는 solar(양력)
   # date: 출생일 YYYY-MM-DD (음력이면 음력 날짜 그대로)
   # leap_month: 음력 윤달이면 true (양력은 생략 가능)
-  - name: 엄마
-    type: lunar
-    date: 1965-03-15
-    leap_month: false
-
-  - name: 나
+  - name: 홍길동
     type: solar
-    date: 1995-08-20
+    date: 1990-01-01
+
+  - name: 홍길순
+    type: lunar
+    date: 1992-08-15
+    leap_month: false

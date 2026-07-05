@@ -16,6 +16,7 @@ import yaml
 from korean_lunar_calendar import KoreanLunarCalendar
 
 CONFIG_PATH = Path(__file__).parent / "birthdays.yaml"
+EXAMPLE_PATH = Path(__file__).parent / "birthdays.example.yaml"
 OUTPUT_PATH = Path(__file__).parent / "public" / "birthdays.ics"
 
 _cal = KoreanLunarCalendar()
@@ -105,7 +106,8 @@ def build(cfg: dict, today: date) -> str:
 
 
 def main() -> None:
-    cfg = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+    path = CONFIG_PATH if CONFIG_PATH.exists() else EXAMPLE_PATH
+    cfg = yaml.safe_load(path.read_text(encoding="utf-8"))
     ics = build(cfg, date.today())
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(ics, encoding="utf-8")
