@@ -1,6 +1,6 @@
 # googleCalendar-Lunar
 
-음력·양력 생일을 하나의 캘린더 구독(`.ics`)으로 자동 생성.
+음력·양력 생일과 고정 기념일, 100일·주년 일정을 하나의 캘린더 구독(`.ics`)으로 자동 생성.
 **음력 생일**은 매년 양력 날짜가 바뀌어 일반 반복 일정으로 불가 → 연도별 양력 날짜를 계산해 개별 이벤트로 만든다.
 
 - 설정은 `birthdays.yaml` **한 파일만** 수정 (개인정보라 gitignore됨. `birthdays.example.yaml`을 복사해 만든다)
@@ -78,7 +78,7 @@ https://<사용자명>.github.io/googleCalendar-Lunar/birthdays.ics
 
 ---
 
-## 사용법 — 생일 추가/수정
+## 사용법 — 기념일 추가/수정
 
 `birthdays.example.yaml` 을 `birthdays.yaml` 로 복사해 고치고 push 하면 끝.
 `birthdays.yaml` 은 **gitignore** 되어 push 되지 않는다(개인정보). 파일이 없으면 빌드는 `birthdays.example.yaml` 로 대체된다.
@@ -88,6 +88,7 @@ settings:
   years_ahead: 50                              # 오늘부터 몇 년치 생성
   all_day: true                                # 종일 일정
   reminder_days: 1                             # 며칠 전 알림 (0=당일)
+  calendar_name: "기념일"                     # 캘린더 목록에 표시할 이름
   title_format: "🎂 {name} 생일"               # {name}=이름
 
 people:
@@ -99,6 +100,20 @@ people:
     type: lunar
     date: 08-15          # 음력 날짜 그대로 (연도 생략 가능)
     leap_month: false    # 음력 윤달이면 true (양력은 생략 가능)
+
+annual_events:
+  - name: 부모님 결혼 기념일
+    title: "부모님 결혼 기념일 💍"
+    type: solar
+    date: 10-29
+
+milestones:
+  - name: 기념일
+    start_date: 2026-06-24       # 이 날짜를 1일째로 계산
+    every_days: 100              # 100일, 200일, 300일…
+    yearly: true                 # 1주년, 2주년, 3주년…
+    day_title_format: "{days}일 ❤️"
+    anniversary_title_format: "❤️ {years}주년"
 ```
 
 | 필드 | 설명 |
@@ -108,9 +123,16 @@ people:
 | `leap_month` | 음력 윤달 출생만 `true` |
 | `years_ahead` | 미래 몇 년치 생성할지 |
 | `reminder_days` | 알림 며칠 전 (`0`=당일 아침) |
+| `calendar_name` | 캘린더 목록에 표시할 이름 |
 | `title_format` | 일정 제목. `{name}` 치환 |
+| `annual_events` | 매년 같은 월·일에 생성할 고정 기념일 목록 |
+| `start_date` | 일수·주년 계산의 기준일. 이 날짜가 `1일` |
+| `every_days` | 일수 기념일 간격. `100`이면 100일, 200일… 생성 |
+| `yearly` | `true`이면 기준일 다음 해부터 1주년, 2주년… 생성 |
+| `day_title_format` | 일수 제목. `{name}`, `{days}` 치환 |
+| `anniversary_title_format` | 주년 제목. `{name}`, `{years}` 치환 |
 
-수정 → `git add . && git commit -m "생일 수정" && git push` → 자동 재생성·배포.
+수정 → `git add . && git commit -m "기념일 수정" && git push` → 자동 재생성·배포.
 
 ---
 

@@ -1,5 +1,5 @@
-# 생일 설정 예시 파일.
-# 이 파일을 birthdays.yaml 로 복사한 뒤 본인 생일로 수정하세요.
+# 기념일 설정 예시 파일.
+# 이 파일을 birthdays.yaml 로 복사한 뒤 본인 기념일로 수정하세요.
 #   cp birthdays.example.yaml birthdays.yaml
 # birthdays.yaml 은 .gitignore 되어 push 되지 않습니다(개인정보).
 # birthdays.yaml 이 없으면 generate.py 는 이 예시 파일로 빌드합니다.
@@ -8,6 +8,7 @@ settings:
   years_ahead: 50                              # 오늘부터 몇 년치 생성
   all_day: true                                # true=종일 일정
   reminder_days: 1                             # 며칠 전 알림 (0=당일)
+  calendar_name: "기념일"                     # 캘린더 목록에 표시할 이름
   title_format: "🎂 {name} 생일"               # {name}=이름
 
 people:
@@ -22,3 +23,17 @@ people:
     type: lunar
     date: 08-15
     leap_month: false
+
+annual_events:
+  - name: 부모님 결혼 기념일
+    title: "부모님 결혼 기념일 💍"
+    type: solar
+    date: 10-29
+
+milestones:
+  - name: 기념일
+    start_date: 2026-06-24                     # 이 날짜를 1일째로 계산
+    every_days: 100                            # 100일, 200일, 300일…
+    yearly: true                               # 1주년, 2주년, 3주년…
+    day_title_format: "{days}일 ❤️"
+    anniversary_title_format: "❤️ {years}주년"

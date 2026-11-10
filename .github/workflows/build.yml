@@ -1,4 +1,4 @@
-name: Build & Deploy birthdays.ics
+name: Build & Deploy anniversary calendar
 
 on:
   schedule:
